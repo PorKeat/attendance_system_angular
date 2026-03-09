@@ -1,0 +1,136 @@
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden"
+     style="background: linear-gradient(170deg, #12022e 0%, #3b0d8a 45%, #7c2fc8 100%)">
+
+  <!-- Stars canvas -->
+  <canvas id="starsCanvas" class="absolute inset-0 w-full h-full pointer-events-none"></canvas>
+
+  <!-- SVG Landscape -->
+  <svg class="absolute bottom-0 left-0 w-full pointer-events-none" style="height:55%"
+       viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+    <!-- Far mountains -->
+    <path d="M0,220 L100,120 L200,175 L340,90 L480,155 L580,75 L700,135 L820,80 L940,140 L1060,95 L1180,155 L1300,85 L1440,140 L1440,420 L0,420 Z"
+          fill="#3b1080" opacity="0.75"/>
+    <!-- Near mountains -->
+    <path d="M0,280 L90,200 L180,248 L300,165 L430,228 L560,172 L680,235 L800,168 L920,230 L1040,182 L1160,242 L1280,188 L1400,235 L1440,210 L1440,420 L0,420 Z"
+          fill="#2a0a62" opacity="0.9"/>
+    <!-- Far pines -->
+    <g fill="#1e0850" opacity="0.95">
+      <polygon points="40,340 56,288 72,340"/><polygon points="54,340 70,276 86,340"/>
+      <polygon points="110,340 128,282 146,340"/><polygon points="126,340 144,268 162,340"/>
+      <polygon points="195,340 211,285 227,340"/><polygon points="270,340 286,272 302,340"/>
+      <polygon points="330,340 348,280 366,340"/><polygon points="400,340 416,278 432,340"/>
+      <polygon points="460,340 476,288 492,340"/><polygon points="520,340 538,272 556,340"/>
+      <polygon points="580,340 596,282 612,340"/><polygon points="640,340 658,268 676,340"/>
+      <polygon points="700,340 716,285 732,340"/><polygon points="760,340 778,278 796,340"/>
+      <polygon points="820,340 836,285 852,340"/><polygon points="880,340 898,272 916,340"/>
+      <polygon points="940,340 956,282 972,340"/><polygon points="1000,340 1018,275 1036,340"/>
+      <polygon points="1060,340 1076,285 1092,340"/><polygon points="1120,340 1138,270 1156,340"/>
+      <polygon points="1180,340 1196,282 1212,340"/><polygon points="1250,340 1266,275 1282,340"/>
+      <polygon points="1310,340 1328,280 1346,340"/><polygon points="1380,340 1396,272 1412,340"/>
+    </g>
+    <!-- Close pines -->
+    <g fill="#0e0428">
+      <polygon points="0,420 24,325 48,420"/><polygon points="22,420 48,308 74,420"/>
+      <polygon points="58,420 86,318 114,420"/><polygon points="98,420 122,305 146,420"/>
+      <polygon points="140,420 168,315 196,420"/><polygon points="188,420 212,302 236,420"/>
+      <polygon points="232,420 262,315 292,420"/><polygon points="280,420 304,308 328,420"/>
+      <polygon points="336,420 364,318 392,420"/><polygon points="390,420 414,305 438,420"/>
+      <polygon points="445,420 475,310 505,420"/><polygon points="510,420 534,302 558,420"/>
+      <polygon points="568,420 596,315 624,420"/><polygon points="630,420 654,308 678,420"/>
+      <polygon points="690,420 720,318 750,420"/><polygon points="758,420 782,305 806,420"/>
+      <polygon points="818,420 848,315 878,420"/><polygon points="885,420 909,302 933,420"/>
+      <polygon points="945,420 975,312 1005,420"/><polygon points="1012,420 1036,305 1060,420"/>
+      <polygon points="1072,420 1102,315 1132,420"/><polygon points="1138,420 1162,308 1186,420"/>
+      <polygon points="1198,420 1228,318 1258,420"/><polygon points="1264,420 1288,305 1312,420"/>
+      <polygon points="1325,420 1355,312 1385,420"/><polygon points="1390,420 1416,302 1442,420"/>
+    </g>
+  </svg>
+
+  <!-- Login card -->
+  <div #loginCard id="loginCard"
+       class="relative z-10 w-full max-w-sm mx-5 px-8 py-10 rounded-2xl border border-white/20"
+       style="background: rgba(255,255,255,0.08); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+              box-shadow: 0 8px 48px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.18); opacity:0">
+
+    <!-- Title -->
+    <h1 #loginTitle id="loginTitle"
+        class="text-center text-3xl font-bold text-white mb-7 tracking-wide"
+        style="text-shadow: 0 0 30px rgba(180,130,255,0.6); opacity:0">
+      Login
+    </h1>
+
+    <!-- Error -->
+    @if (error) {
+      <div #errorBanner
+           class="mb-4 text-center text-sm text-red-300 border border-red-400/30 rounded-xl px-4 py-2.5"
+           style="background: rgba(255,80,80,0.12)">
+        {{ error }}
+      </div>
+    }
+
+    <!-- Username -->
+    <div class="relative mb-3 form-field" style="opacity:0">
+      <input
+        [(ngModel)]="username"
+        type="text"
+        placeholder="Username"
+        class="w-full rounded-full px-5 py-3 pr-11 text-sm text-white placeholder-white/50 outline-none
+               border border-white/20 transition-all duration-200
+               focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20"
+        style="background: rgba(255,255,255,0.1); backdrop-filter: blur(8px)"
+      />
+      <span class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+      </span>
+    </div>
+
+    <!-- Password -->
+    <div class="relative mb-4 form-field" style="opacity:0">
+      <input
+        [(ngModel)]="password"
+        type="password"
+        placeholder="Password"
+        class="w-full rounded-full px-5 py-3 pr-11 text-sm text-white placeholder-white/50 outline-none
+               border border-white/20 transition-all duration-200
+               focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20"
+        style="background: rgba(255,255,255,0.1); backdrop-filter: blur(8px)"
+      />
+      <span class="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+        </svg>
+      </span>
+    </div>
+
+    <!-- Remember me / Forgot password -->
+    <div class="flex items-center justify-between mb-5 form-field" style="opacity:0">
+      <label class="flex items-center gap-2 text-white/70 text-xs cursor-pointer select-none">
+        <input type="checkbox" [(ngModel)]="rememberMe" class="accent-purple-500 w-3.5 h-3.5" />
+        Remember me
+      </label>
+      <a href="#" class="text-white/70 text-xs hover:text-purple-300 transition-colors">Forgot password?</a>
+    </div>
+
+    <!-- Login button -->
+    <button
+      #loginBtn
+      (click)="login()"
+      [disabled]="loading"
+      class="form-field w-full rounded-full py-3 text-sm font-semibold tracking-wide
+             bg-white text-purple-900 transition-all duration-200
+             hover:bg-purple-50 hover:shadow-lg hover:-translate-y-0.5
+             disabled:opacity-60 disabled:cursor-not-allowed disabled:translate-y-0 mb-4"
+      style="opacity:0; box-shadow: 0 4px 24px rgba(0,0,0,0.25)"
+    >
+      {{ loading ? 'Signing in…' : 'Login' }}
+    </button>
+
+    <!-- Register -->
+    <p class="form-field text-center text-xs text-white/60" style="opacity:0">
+      Don't have an account?
+      <a href="#" class="text-purple-300 font-semibold hover:text-white transition-colors">Register</a>
+    </p>
+  </div>
+</div>

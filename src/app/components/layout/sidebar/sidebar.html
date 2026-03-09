@@ -1,0 +1,132 @@
+<!-- Sidebar: purple night-sky glassmorphism with lucide-angular icons + GSAP -->
+<div #sidebarEl
+     class="h-screen w-64 fixed left-0 top-0 flex flex-col z-50 overflow-hidden"
+     style="background: linear-gradient(170deg, #12022e 0%, #3b0d8a 55%, #6b21c8 100%);
+            border-right: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 4px 0 32px rgba(0,0,0,0.5);
+            opacity: 0">
+
+  <!-- Star dots -->
+  <div class="absolute inset-0 pointer-events-none overflow-hidden">
+    <div class="absolute w-1 h-1 rounded-full bg-white/40 top-[8%] left-[20%]"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/30 top-[15%] left-[70%]"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-white/20 top-[25%] left-[45%]"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/40 top-[35%] left-[80%]"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-white/20 top-[12%] left-[88%]"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-purple-300/40 top-[50%] left-[15%]"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-white/30 top-[60%] left-[60%]"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/20 top-[72%] left-[30%]"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-purple-200/30 top-[82%] left-[75%]"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/40 top-[90%] left-[50%]"></div>
+  </div>
+
+  <!-- Logo / Brand -->
+  <div #brandEl
+       class="relative px-6 py-5 flex items-center gap-3"
+       style="border-bottom: 1px solid rgba(255,255,255,0.1); opacity: 0">
+    <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-white/80"
+         style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2)">
+      <lucide-icon [img]="graduationCap" [size]="18" class="text-white"></lucide-icon>
+    </div>
+    <h1 class="text-base font-bold text-white tracking-wide">SchoolApp</h1>
+  </div>
+
+  <!-- Nav -->
+  <nav class="relative flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+
+    <p #menuLabel
+       class="text-white/30 text-[10px] font-semibold uppercase tracking-widest px-3 mb-2"
+       style="opacity: 0">Menu</p>
+
+    <a #navItem
+       routerLink="/students" routerLinkActive="active-nav"
+       class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/60
+              hover:text-white transition-all duration-200 relative overflow-hidden"
+       style="opacity: 0">
+      <span class="nav-icon w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all duration-200"
+            style="background: rgba(255,255,255,0.06)">
+        <lucide-icon [img]="users" [size]="16" class="text-current"></lucide-icon>
+      </span>
+      Students
+    </a>
+
+    <a #navItem
+       routerLink="/attendance" routerLinkActive="active-nav"
+       class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/60
+              hover:text-white transition-all duration-200 relative overflow-hidden"
+       style="opacity: 0">
+      <span class="nav-icon w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all duration-200"
+            style="background: rgba(255,255,255,0.06)">
+        <lucide-icon [img]="clipboardList" [size]="16" class="text-current"></lucide-icon>
+      </span>
+      Attendance
+    </a>
+
+    <a #navItem
+       routerLink="/class" routerLinkActive="active-nav"
+       class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/60
+              hover:text-white transition-all duration-200 relative overflow-hidden"
+       style="opacity: 0">
+      <span class="nav-icon w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all duration-200"
+            style="background: rgba(255,255,255,0.06)">
+        <lucide-icon [img]="school" [size]="16" class="text-current"></lucide-icon>
+      </span>
+      Class
+    </a>
+
+    <a #navItem
+       routerLink="/subject" routerLinkActive="active-nav"
+       class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/60
+              hover:text-white transition-all duration-200 relative overflow-hidden"
+       style="opacity: 0">
+      <span class="nav-icon w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all duration-200"
+            style="background: rgba(255,255,255,0.06)">
+        <lucide-icon [img]="bookOpen" [size]="16" class="text-current"></lucide-icon>
+      </span>
+      Subject
+    </a>
+
+    <a #navItem
+       routerLink="/teacher" routerLinkActive="active-nav"
+       class="nav-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white/60
+              hover:text-white transition-all duration-200 relative overflow-hidden"
+       style="opacity: 0">
+      <span class="nav-icon w-8 h-8 flex items-center justify-center rounded-lg shrink-0 transition-all duration-200"
+            style="background: rgba(255,255,255,0.06)">
+        <lucide-icon [img]="userRoundCheck" [size]="16" class="text-current"></lucide-icon>
+      </span>
+      Teacher
+    </a>
+
+  </nav>
+
+  <!-- Logout -->
+  <div #logoutEl
+       class="relative px-3 py-4"
+       style="border-top: 1px solid rgba(255,255,255,0.1); opacity: 0">
+    <button (click)="logout()"
+            class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-red-400/80
+                   hover:text-red-300 hover:bg-red-500/10 transition-all duration-200">
+      <span class="w-8 h-8 flex items-center justify-center rounded-lg shrink-0"
+            style="background: rgba(239,68,68,0.08)">
+        <lucide-icon [img]="logOut" [size]="16" class="text-current"></lucide-icon>
+      </span>
+      Logout
+    </button>
+  </div>
+
+</div>
+
+<style>
+  .active-nav {
+    color: white !important;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+  .active-nav .nav-icon {
+    background: rgba(168, 85, 247, 0.35) !important;
+  }
+  .nav-link:hover {
+    background: rgba(255,255,255,0.07);
+  }
+</style>

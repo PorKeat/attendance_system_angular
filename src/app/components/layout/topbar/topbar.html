@@ -1,0 +1,56 @@
+<!-- Topbar: matches the purple night-sky glassmorphism theme -->
+<div #topbarEl
+     class="h-16 fixed top-0 left-64 right-0 z-40 flex items-center justify-between px-6"
+     style="background: rgba(18,2,46,0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+            opacity: 0">
+
+  <!-- Left: Welcome -->
+  <div #welcomeEl class="flex items-center gap-2" style="opacity: 0">
+    <span class="text-white/40 text-xs font-medium uppercase tracking-widest">Welcome back</span>
+    <span class="text-white/20 text-xs">·</span>
+    <span class="text-white/70 text-xs">{{ today }}</span>
+  </div>
+
+  <!-- Right: User chip -->
+  <div class="flex items-center gap-3">
+
+    <!-- Notification bell -->
+    <button #bellEl
+            class="relative w-8 h-8 rounded-lg flex items-center justify-center text-white/50
+                   hover:text-white/90 hover:bg-white/10 transition-all duration-200"
+            style="border: 1px solid rgba(255,255,255,0.1); opacity: 0">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full"
+            style="background: #a855f7; box-shadow: 0 0 6px #a855f7"></span>
+    </button>
+
+    <!-- Divider -->
+    <div #dividerEl class="w-px h-5 bg-white/10" style="opacity: 0"></div>
+
+    <!-- Avatar + name -->
+    <div #userChipEl class="flex items-center gap-2.5" style="opacity: 0">
+      <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+           style="background: linear-gradient(135deg, #a855f7, #7c3aed);
+                  border: 1.5px solid rgba(255,255,255,0.25);
+                  box-shadow: 0 0 12px rgba(168,85,247,0.4)">
+        {{ user?.username?.charAt(0)?.toUpperCase() }}
+      </div>
+      <div class="hidden sm:block">
+        <p class="text-white text-xs font-semibold leading-tight">{{ user?.username }}</p>
+        <p class="text-white/40 text-[10px] leading-tight capitalize">{{ user?.role }}</p>
+      </div>
+      <svg class="text-white/30 ml-0.5" width="12" height="12" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M6 9l6 6 6-6"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
