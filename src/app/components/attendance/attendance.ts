@@ -2,6 +2,7 @@ import {
   Component,
   OnInit,
   AfterViewInit,
+  OnDestroy,
   ChangeDetectorRef,
   ElementRef,
   ViewChild,
@@ -22,7 +23,7 @@ import gsap from 'gsap';
   imports: [FormsModule, LucideAngularModule, DatePipe],
   templateUrl: './attendance.html',
 })
-export class AttendanceComponent implements OnInit, AfterViewInit {
+export class AttendanceComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly plusIcon = Plus;
   readonly checkIcon = Check;
   readonly xIcon = X;
@@ -39,18 +40,14 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
   studentList: any[] = [];
   teacherList: any[] = [];
   subjectList: any[] = [];
-
-  // Filtered lists for search
   filteredStudents: any[] = [];
   filteredTeachers: any[] = [];
   filteredSubjects: any[] = [];
 
-  // Search input values
   studentSearch = '';
   teacherSearch = '';
   subjectSearch = '';
 
-  // Dropdown open states
   studentDropOpen = false;
   teacherDropOpen = false;
   subjectDropOpen = false;
@@ -87,7 +84,77 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
     this.playPageEntrance();
   }
 
-  // ─── Load dropdown data ───────────────────────────────────────────────────────
+  ngOnDestroy(): void {
+    gsap.killTweensOf(this.headerEl?.nativeElement);
+    gsap.killTweensOf(this.tableEl?.nativeElement);
+    if (this.tableEl?.nativeElement) {
+      gsap.killTweensOf(this.tableEl.nativeElement.querySelectorAll('tbody tr'));
+    }
+  }
+
+  // ─── Animations ──────────────────────────────────────────────────────────────
+
+  private playPageEntrance(): void {
+    gsap.set(this.headerEl.nativeElement, { y: -24, opacity: 0 });
+    gsap.to(this.headerEl.nativeElement, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' });
+  }
+
+  private animateTableIn(): void {
+    const el = this.tableEl?.nativeElement;
+    if (!el) return;
+    gsap.set(el, { y: 28, opacity: 0 });
+    gsap.to(el, { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', delay: 0.05 });
+    const rows = el.querySelectorAll('tbody tr');
+    if (rows.length) {
+      gsap.set(rows, { x: -16, opacity: 0 });
+      gsap.to(rows, {
+        x: 0,
+        opacity: 1,
+        duration: 0.3,
+        stagger: 0.06,
+        ease: 'power2.out',
+        delay: 0.2,
+      });
+    }
+  }
+
+  private animateModalIn(): void {
+    setTimeout(() => {
+      if (!this.modalBackdrop?.nativeElement || !this.modalCard?.nativeElement) return;
+      gsap.set(this.modalBackdrop.nativeElement, { opacity: 0 });
+      gsap.set(this.modalCard.nativeElement, { scale: 0.88, opacity: 0, y: 24 });
+      gsap.to(this.modalBackdrop.nativeElement, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      gsap.to(this.modalCard.nativeElement, {
+        scale: 1,
+        opacity: 1,
+        y: 0,
+        duration: 0.4,
+        ease: 'back.out(1.6)',
+      });
+    }, 0);
+  }
+
+  private animateModalOut(onComplete: () => void): void {
+    if (!this.modalBackdrop?.nativeElement || !this.modalCard?.nativeElement) {
+      onComplete();
+      return;
+    }
+    gsap.to(this.modalCard.nativeElement, {
+      scale: 0.92,
+      opacity: 0,
+      y: 16,
+      duration: 0.25,
+      ease: 'power2.in',
+    });
+    gsap.to(this.modalBackdrop.nativeElement, {
+      opacity: 0,
+      duration: 0.3,
+      ease: 'power2.in',
+      onComplete,
+    });
+  }
+
+  // ─── Dropdown data ────────────────────────────────────────────────────────────
 
   loadDropdownData(): void {
     this.studentService.getAll().subscribe({
@@ -130,23 +197,19 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
     this.subjectDropOpen = true;
   }
 
-  // ─── Select from dropdown ────────────────────────────────────────────────────
-
-  selectStudent(student: any): void {
-    this.form.studentid = student.studentid;
-    this.studentSearch = student.studentname;
+  selectStudent(s: any): void {
+    this.form.studentid = s.studentid;
+    this.studentSearch = s.studentname;
     this.studentDropOpen = false;
   }
-
-  selectTeacher(teacher: any): void {
-    this.form.teacherid = teacher.teacherid;
-    this.teacherSearch = teacher.teachername;
+  selectTeacher(t: any): void {
+    this.form.teacherid = t.teacherid;
+    this.teacherSearch = t.teachername;
     this.teacherDropOpen = false;
   }
-
-  selectSubject(subject: any): void {
-    this.form.subjectid = subject.subjectid;
-    this.subjectSearch = subject.subjectname;
+  selectSubject(s: any): void {
+    this.form.subjectid = s.subjectid;
+    this.subjectSearch = s.subjectname;
     this.subjectDropOpen = false;
   }
 
@@ -169,69 +232,6 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
     if (status === 0)
       return 'background:rgba(239,68,68,0.15);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)';
     return 'background:rgba(251,191,36,0.15);color:#fde68a;border:1px solid rgba(251,191,36,0.2)';
-  }
-
-  // ─── Animations ──────────────────────────────────────────────────────────────
-
-  private playPageEntrance(): void {
-    gsap.fromTo(
-      this.headerEl.nativeElement,
-      { y: -24, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' },
-    );
-  }
-
-  private animateTableIn(): void {
-    const el = this.tableEl?.nativeElement;
-    if (!el) return;
-    gsap.fromTo(
-      el,
-      { y: 28, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out', delay: 0.05 },
-    );
-    const rows = el.querySelectorAll('tbody tr');
-    if (rows.length)
-      gsap.fromTo(
-        rows,
-        { x: -16, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.3, stagger: 0.06, ease: 'power2.out', delay: 0.2 },
-      );
-  }
-
-  private animateModalIn(): void {
-    setTimeout(() => {
-      if (!this.modalBackdrop?.nativeElement || !this.modalCard?.nativeElement) return;
-      gsap.fromTo(
-        this.modalBackdrop.nativeElement,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.3, ease: 'power2.out' },
-      );
-      gsap.fromTo(
-        this.modalCard.nativeElement,
-        { scale: 0.88, opacity: 0, y: 24 },
-        { scale: 1, opacity: 1, y: 0, duration: 0.4, ease: 'back.out(1.6)' },
-      );
-    }, 0);
-  }
-
-  private animateModalOut(onComplete: () => void): void {
-    if (!this.modalBackdrop?.nativeElement || !this.modalCard?.nativeElement) {
-      onComplete();
-      return;
-    }
-    gsap.to(this.modalCard.nativeElement, {
-      scale: 0.92,
-      opacity: 0,
-      y: 16,
-      duration: 0.25,
-      ease: 'power2.in',
-    });
-    gsap.to(this.modalBackdrop.nativeElement, {
-      opacity: 0,
-      duration: 0.3,
-      ease: 'power2.in',
-      onComplete,
-    });
   }
 
   // ─── CRUD ─────────────────────────────────────────────────────────────────────
@@ -288,7 +288,6 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
       att_date: record.att_date?.substring(0, 10),
       att_status: record.att_status,
     };
-    // Pre-fill search inputs with current names
     this.studentSearch = record.student?.studentname ?? '';
     this.teacherSearch = record.teacher?.teachername ?? '';
     this.subjectSearch = record.subject?.subjectname ?? '';
@@ -309,7 +308,6 @@ export class AttendanceComponent implements OnInit, AfterViewInit {
       att_date: this.form.att_date,
       att_status: this.form.att_status,
     };
-
     if (this.isEditing) {
       this.attendanceService.update(this.form.attendentid, payload).subscribe({
         next: () => {

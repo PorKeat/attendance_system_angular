@@ -9,6 +9,11 @@
     <div class="absolute w-0.5 h-0.5 rounded-full bg-white/30" style="top: 16%; left: 20%"></div>
     <div class="absolute w-1 h-1 rounded-full bg-white/20" style="top: 18%; left: 48%"></div>
     <div class="absolute w-0.5 h-0.5 rounded-full bg-white/40" style="top: 14%; left: 80%"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-white/30" style="top: 22%; left: 65%"></div>
+    <div
+      class="absolute w-0.5 h-0.5 rounded-full bg-purple-300/40"
+      style="top: 9%; left: 93%"
+    ></div>
   </div>
 
   <!-- SVG Landscape -->
@@ -29,18 +34,42 @@
         fill="#2a0a62"
         opacity="0.6"
       />
+      <g fill="#1e0850" opacity="0.8">
+        <polygon points="40,340 56,288 72,340" />
+        <polygon points="110,340 128,282 146,340" />
+        <polygon points="195,340 211,285 227,340" />
+        <polygon points="330,340 348,280 366,340" />
+        <polygon points="460,340 476,288 492,340" />
+        <polygon points="580,340 596,282 612,340" />
+        <polygon points="700,340 716,285 732,340" />
+        <polygon points="820,340 836,285 852,340" />
+        <polygon points="940,340 956,282 972,340" />
+        <polygon points="1060,340 1076,285 1092,340" />
+        <polygon points="1180,340 1196,282 1212,340" />
+        <polygon points="1310,340 1328,280 1346,340" />
+      </g>
       <g fill="#0e0428">
         <polygon points="0,420 24,325 48,420" />
+        <polygon points="58,420 86,318 114,420" />
         <polygon points="140,420 168,315 196,420" />
+        <polygon points="232,420 262,315 292,420" />
+        <polygon points="336,420 364,318 392,420" />
+        <polygon points="445,420 475,310 505,420" />
         <polygon points="568,420 596,315 624,420" />
+        <polygon points="690,420 720,318 750,420" />
         <polygon points="818,420 848,315 878,420" />
+        <polygon points="945,420 975,312 1005,420" />
+        <polygon points="1072,420 1102,315 1132,420" />
+        <polygon points="1198,420 1228,318 1258,420" />
+        <polygon points="1325,420 1355,312 1385,420" />
       </g>
     </svg>
   </div>
 
+  <!-- Page content -->
   <div class="relative z-10">
     <!-- Header -->
-    <div #headerEl class="flex items-center justify-between mb-6" style="opacity: 0">
+    <div #headerEl class="flex items-center justify-between mb-6">
       <div>
         <h1 class="text-2xl font-bold text-white tracking-wide">Attendance</h1>
         <p class="text-white/40 text-xs mt-0.5">Track student attendance records</p>
@@ -91,9 +120,9 @@
         #tableEl
         class="rounded-2xl overflow-hidden"
         style="
-          opacity: 0;
           background: rgba(255, 255, 255, 0.07);
           backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
           border: 1px solid rgba(255, 255, 255, 0.12);
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         "
@@ -149,6 +178,7 @@
                 <td class="px-6 py-4">
                   <span class="text-white/30 text-xs font-mono">{{ record.attendentid }}</span>
                 </td>
+
                 <td class="px-6 py-4">
                   <div class="flex items-center gap-2">
                     <div
@@ -165,11 +195,13 @@
                     }}</span>
                   </div>
                 </td>
+
                 <td class="px-6 py-4">
                   <span class="text-white/70 text-xs">{{
                     record.teacher?.teachername ?? '—'
                   }}</span>
                 </td>
+
                 <td class="px-6 py-4">
                   <span
                     class="px-2.5 py-1 rounded-lg text-xs font-medium"
@@ -182,11 +214,13 @@
                     {{ record.subject?.subjectname ?? '—' }}
                   </span>
                 </td>
+
                 <td class="px-6 py-4">
                   <span class="text-white/70 text-xs">{{
                     record.att_date | date: 'mediumDate'
                   }}</span>
                 </td>
+
                 <td class="px-6 py-4">
                   <span
                     class="px-2.5 py-1 rounded-full text-xs font-medium"
@@ -195,6 +229,7 @@
                     {{ statusLabel(record.att_status) }}
                   </span>
                 </td>
+
                 <td class="px-6 py-4">
                   <div class="flex items-center justify-center gap-2">
                     <button
@@ -223,6 +258,7 @@
             }
           </tbody>
         </table>
+
         @if (attendances.length === 0) {
           <div class="flex flex-col items-center justify-center py-16 gap-3">
             <lucide-icon [img]="clipboardIcon" [size]="40" class="text-white/20"></lucide-icon>
@@ -238,7 +274,7 @@
     <div
       #modalBackdrop
       class="fixed inset-0 flex items-center justify-center z-50"
-      style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); opacity: 0"
+      style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px)"
       (click)="closeAllDropdowns()"
     >
       <div
@@ -250,8 +286,6 @@
           box-shadow:
             0 24px 64px rgba(0, 0, 0, 0.6),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
-          opacity: 0;
-          transform: scale(0.92);
         "
         (click)="$event.stopPropagation()"
       >
@@ -273,7 +307,7 @@
           </button>
         </div>
 
-        <!-- ── Student searchable dropdown ── -->
+        <!-- Student -->
         <div class="mb-4 relative">
           <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
             >Student</label
@@ -300,7 +334,7 @@
               @for (s of filteredStudents; track s.studentid) {
                 <div
                   (click)="selectStudent(s); $event.stopPropagation()"
-                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2"
                   onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
                   onmouseout="this.style.background = 'transparent'"
                 >
@@ -317,7 +351,7 @@
           }
         </div>
 
-        <!-- ── Teacher searchable dropdown ── -->
+        <!-- Teacher -->
         <div class="mb-4 relative">
           <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
             >Teacher</label
@@ -344,7 +378,7 @@
               @for (t of filteredTeachers; track t.teacherid) {
                 <div
                   (click)="selectTeacher(t); $event.stopPropagation()"
-                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2"
                   onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
                   onmouseout="this.style.background = 'transparent'"
                 >
@@ -361,7 +395,7 @@
           }
         </div>
 
-        <!-- ── Subject searchable dropdown ── -->
+        <!-- Subject -->
         <div class="mb-4 relative">
           <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
             >Subject</label
@@ -388,7 +422,7 @@
               @for (s of filteredSubjects; track s.subjectid) {
                 <div
                   (click)="selectSubject(s); $event.stopPropagation()"
-                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2"
                   onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
                   onmouseout="this.style.background = 'transparent'"
                 >
