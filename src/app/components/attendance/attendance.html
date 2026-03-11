@@ -1,1 +1,464 @@
-<p>attendance works!</p>
+<div class="relative min-h-screen overflow-x-hidden" (click)="closeAllDropdowns()">
+  <!-- Star dots -->
+  <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+    <div class="absolute w-1 h-1 rounded-full bg-white/40" style="top: 4%; left: 12%"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/30" style="top: 8%; left: 35%"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-white/20" style="top: 5%; left: 55%"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/40" style="top: 11%; left: 72%"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-purple-200/40" style="top: 3%; left: 88%"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/30" style="top: 16%; left: 20%"></div>
+    <div class="absolute w-1 h-1 rounded-full bg-white/20" style="top: 18%; left: 48%"></div>
+    <div class="absolute w-0.5 h-0.5 rounded-full bg-white/40" style="top: 14%; left: 80%"></div>
+  </div>
+
+  <!-- SVG Landscape -->
+  <div class="fixed bottom-0 left-0 right-0 pointer-events-none z-0" style="height: 42%">
+    <svg
+      viewBox="0 0 1440 420"
+      preserveAspectRatio="xMidYMax slice"
+      style="width: 100%; height: 100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0,220 L100,120 L200,175 L340,90 L480,155 L580,75 L700,135 L820,80 L940,140 L1060,95 L1180,155 L1300,85 L1440,140 L1440,420 L0,420 Z"
+        fill="#3b1080"
+        opacity="0.5"
+      />
+      <path
+        d="M0,280 L90,200 L180,248 L300,165 L430,228 L560,172 L680,235 L800,168 L920,230 L1040,182 L1160,242 L1280,188 L1400,235 L1440,210 L1440,420 L0,420 Z"
+        fill="#2a0a62"
+        opacity="0.6"
+      />
+      <g fill="#0e0428">
+        <polygon points="0,420 24,325 48,420" />
+        <polygon points="140,420 168,315 196,420" />
+        <polygon points="568,420 596,315 624,420" />
+        <polygon points="818,420 848,315 878,420" />
+      </g>
+    </svg>
+  </div>
+
+  <div class="relative z-10">
+    <!-- Header -->
+    <div #headerEl class="flex items-center justify-between mb-6" style="opacity: 0">
+      <div>
+        <h1 class="text-2xl font-bold text-white tracking-wide">Attendance</h1>
+        <p class="text-white/40 text-xs mt-0.5">Track student attendance records</p>
+      </div>
+      <button
+        (click)="openCreate(); $event.stopPropagation()"
+        class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-purple-900 bg-white hover:bg-purple-50 hover:-translate-y-0.5 transition-all duration-200"
+        style="box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25)"
+      >
+        <lucide-icon [img]="plusIcon" [size]="15"></lucide-icon>
+        Add Record
+      </button>
+    </div>
+
+    <!-- Success -->
+    @if (success) {
+      <div
+        class="mb-4 px-4 py-3 rounded-xl text-sm text-emerald-300 border border-emerald-400/20 flex items-center gap-2"
+        style="background: rgba(16, 185, 129, 0.1)"
+      >
+        <lucide-icon [img]="checkIcon" [size]="14"></lucide-icon>{{ success }}
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error) {
+      <div
+        class="mb-4 px-4 py-3 rounded-xl text-sm text-red-300 border border-red-400/20 flex items-center gap-2"
+        style="background: rgba(239, 68, 68, 0.1)"
+      >
+        <lucide-icon [img]="xIcon" [size]="14"></lucide-icon>{{ error }}
+      </div>
+    }
+
+    <!-- Loading -->
+    @if (loading) {
+      <div class="flex items-center justify-center py-20 gap-3">
+        <div
+          class="w-5 h-5 rounded-full border-2 border-purple-400 border-t-transparent animate-spin"
+        ></div>
+        <span class="text-white/50 text-sm">Loading records…</span>
+      </div>
+    }
+
+    <!-- Table -->
+    @if (!loading) {
+      <div
+        #tableEl
+        class="rounded-2xl overflow-hidden"
+        style="
+          opacity: 0;
+          background: rgba(255, 255, 255, 0.07);
+          backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        "
+      >
+        <table class="w-full text-sm text-left">
+          <thead>
+            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.08)">
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest"
+              >
+                #
+              </th>
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest"
+              >
+                Student
+              </th>
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest"
+              >
+                Teacher
+              </th>
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest"
+              >
+                Subject
+              </th>
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest"
+              >
+                Date
+              </th>
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest"
+              >
+                Status
+              </th>
+              <th
+                class="px-6 py-4 text-white/30 text-[10px] font-semibold uppercase tracking-widest text-center"
+              >
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (record of attendances; track record.attendentid) {
+              <tr
+                class="transition-all duration-150"
+                style="border-bottom: 1px solid rgba(255, 255, 255, 0.05)"
+                onmouseover="this.style.background = 'rgba(255,255,255,0.05)'"
+                onmouseout="this.style.background = 'transparent'"
+              >
+                <td class="px-6 py-4">
+                  <span class="text-white/30 text-xs font-mono">{{ record.attendentid }}</span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center gap-2">
+                    <div
+                      class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+                      style="
+                        background: linear-gradient(135deg, #a855f7, #7c3aed);
+                        border: 1px solid rgba(255, 255, 255, 0.2);
+                      "
+                    >
+                      {{ record.student?.studentname?.charAt(0)?.toUpperCase() }}
+                    </div>
+                    <span class="text-white font-medium">{{
+                      record.student?.studentname ?? '—'
+                    }}</span>
+                  </div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-white/70 text-xs">{{
+                    record.teacher?.teachername ?? '—'
+                  }}</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span
+                    class="px-2.5 py-1 rounded-lg text-xs font-medium"
+                    style="
+                      background: rgba(168, 85, 247, 0.15);
+                      color: #d8b4fe;
+                      border: 1px solid rgba(168, 85, 247, 0.2);
+                    "
+                  >
+                    {{ record.subject?.subjectname ?? '—' }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-white/70 text-xs">{{
+                    record.att_date | date: 'mediumDate'
+                  }}</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span
+                    class="px-2.5 py-1 rounded-full text-xs font-medium"
+                    [style]="statusStyle(record.att_status)"
+                  >
+                    {{ statusLabel(record.att_status) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center justify-center gap-2">
+                    <button
+                      (click)="openEdit(record)"
+                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-amber-300 transition-all duration-150 hover:-translate-y-0.5"
+                      style="
+                        background: rgba(251, 191, 36, 0.12);
+                        border: 1px solid rgba(251, 191, 36, 0.2);
+                      "
+                    >
+                      <lucide-icon [img]="pencilIcon" [size]="12"></lucide-icon>Edit
+                    </button>
+                    <button
+                      (click)="delete(record.attendentid)"
+                      class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-red-300 transition-all duration-150 hover:-translate-y-0.5"
+                      style="
+                        background: rgba(239, 68, 68, 0.12);
+                        border: 1px solid rgba(239, 68, 68, 0.2);
+                      "
+                    >
+                      <lucide-icon [img]="trashIcon" [size]="12"></lucide-icon>Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+        @if (attendances.length === 0) {
+          <div class="flex flex-col items-center justify-center py-16 gap-3">
+            <lucide-icon [img]="clipboardIcon" [size]="40" class="text-white/20"></lucide-icon>
+            <p class="text-white/30 text-sm">No attendance records found</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Modal -->
+  @if (showForm) {
+    <div
+      #modalBackdrop
+      class="fixed inset-0 flex items-center justify-center z-50"
+      style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); opacity: 0"
+      (click)="closeAllDropdowns()"
+    >
+      <div
+        #modalCard
+        class="w-full max-w-md mx-4 rounded-2xl px-8 py-8"
+        style="
+          background: rgba(30, 5, 70, 0.95);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow:
+            0 24px 64px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+          opacity: 0;
+          transform: scale(0.92);
+        "
+        (click)="$event.stopPropagation()"
+      >
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <lucide-icon
+              [img]="isEditing ? pencilIcon : plusIcon"
+              [size]="16"
+              class="text-purple-400"
+            ></lucide-icon>
+            {{ isEditing ? 'Edit Record' : 'Add Record' }}
+          </h2>
+          <button
+            (click)="closeForm()"
+            class="w-7 h-7 rounded-lg flex items-center justify-center text-white/40 hover:text-white/80 transition-colors"
+            style="background: rgba(255, 255, 255, 0.06)"
+          >
+            <lucide-icon [img]="xIcon" [size]="14"></lucide-icon>
+          </button>
+        </div>
+
+        <!-- ── Student searchable dropdown ── -->
+        <div class="mb-4 relative">
+          <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
+            >Student</label
+          >
+          <input
+            [(ngModel)]="studentSearch"
+            (input)="filterStudents()"
+            (focus)="studentDropOpen = true; filteredStudents = studentList"
+            (click)="$event.stopPropagation()"
+            type="text"
+            placeholder="Search student…"
+            class="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none border transition-all duration-200 focus:border-purple-400/60"
+            style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12)"
+          />
+          @if (studentDropOpen && filteredStudents.length > 0) {
+            <div
+              class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden max-h-44 overflow-y-auto"
+              style="
+                background: rgba(30, 5, 70, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+              "
+            >
+              @for (s of filteredStudents; track s.studentid) {
+                <div
+                  (click)="selectStudent(s); $event.stopPropagation()"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
+                  onmouseout="this.style.background = 'transparent'"
+                >
+                  <div
+                    class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
+                    style="background: linear-gradient(135deg, #a855f7, #7c3aed)"
+                  >
+                    {{ s.studentname?.charAt(0)?.toUpperCase() }}
+                  </div>
+                  {{ s.studentname }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- ── Teacher searchable dropdown ── -->
+        <div class="mb-4 relative">
+          <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
+            >Teacher</label
+          >
+          <input
+            [(ngModel)]="teacherSearch"
+            (input)="filterTeachers()"
+            (focus)="teacherDropOpen = true; filteredTeachers = teacherList"
+            (click)="$event.stopPropagation()"
+            type="text"
+            placeholder="Search teacher…"
+            class="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none border transition-all duration-200 focus:border-purple-400/60"
+            style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12)"
+          />
+          @if (teacherDropOpen && filteredTeachers.length > 0) {
+            <div
+              class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden max-h-44 overflow-y-auto"
+              style="
+                background: rgba(30, 5, 70, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+              "
+            >
+              @for (t of filteredTeachers; track t.teacherid) {
+                <div
+                  (click)="selectTeacher(t); $event.stopPropagation()"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
+                  onmouseout="this.style.background = 'transparent'"
+                >
+                  <div
+                    class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
+                    style="background: linear-gradient(135deg, #6366f1, #4f46e5)"
+                  >
+                    {{ t.teachername?.charAt(0)?.toUpperCase() }}
+                  </div>
+                  {{ t.teachername }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- ── Subject searchable dropdown ── -->
+        <div class="mb-4 relative">
+          <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
+            >Subject</label
+          >
+          <input
+            [(ngModel)]="subjectSearch"
+            (input)="filterSubjects()"
+            (focus)="subjectDropOpen = true; filteredSubjects = subjectList"
+            (click)="$event.stopPropagation()"
+            type="text"
+            placeholder="Search subject…"
+            class="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none border transition-all duration-200 focus:border-purple-400/60"
+            style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12)"
+          />
+          @if (subjectDropOpen && filteredSubjects.length > 0) {
+            <div
+              class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden max-h-44 overflow-y-auto"
+              style="
+                background: rgba(30, 5, 70, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+              "
+            >
+              @for (s of filteredSubjects; track s.subjectid) {
+                <div
+                  (click)="selectSubject(s); $event.stopPropagation()"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
+                  onmouseout="this.style.background = 'transparent'"
+                >
+                  <div
+                    class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
+                    style="background: linear-gradient(135deg, #ec4899, #be185d)"
+                  >
+                    {{ s.subjectname?.charAt(0)?.toUpperCase() }}
+                  </div>
+                  {{ s.subjectname }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Date -->
+        <div class="mb-4">
+          <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
+            >Date</label
+          >
+          <input
+            [(ngModel)]="form.att_date"
+            type="date"
+            class="w-full px-4 py-3 rounded-xl text-sm text-white outline-none border transition-all duration-200 focus:border-purple-400/60"
+            style="
+              background: rgba(255, 255, 255, 0.08);
+              border-color: rgba(255, 255, 255, 0.12);
+              color-scheme: dark;
+            "
+          />
+        </div>
+
+        <!-- Status -->
+        <div class="mb-7">
+          <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
+            >Status</label
+          >
+          <select
+            [(ngModel)]="form.att_status"
+            class="w-full px-4 py-3 rounded-xl text-sm text-white outline-none border transition-all duration-200 focus:border-purple-400/60"
+            style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12)"
+          >
+            <option [ngValue]="''" style="background: #1e0546">Select status</option>
+            <option [ngValue]="1" style="background: #1e0546">Present</option>
+            <option [ngValue]="0" style="background: #1e0546">Absent</option>
+            <option [ngValue]="2" style="background: #1e0546">Late</option>
+          </select>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            (click)="save()"
+            class="flex-1 py-3 rounded-xl text-sm font-semibold text-purple-900 bg-white hover:bg-purple-50 transition-all duration-200"
+            style="box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25)"
+          >
+            {{ isEditing ? 'Update' : 'Create' }}
+          </button>
+          <button
+            (click)="closeForm()"
+            class="flex-1 py-3 rounded-xl text-sm font-semibold text-white/60 hover:text-white transition-all duration-200"
+            style="
+              background: rgba(255, 255, 255, 0.07);
+              border: 1px solid rgba(255, 255, 255, 0.1);
+            "
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

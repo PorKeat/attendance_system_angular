@@ -3,8 +3,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class StudentService {
-  private apiUrl = `${environment.apiUrl}/students`;
+export class SubjectService {
+  private apiUrl = `${environment.apiUrl}/subject`;
 
   constructor(private http: HttpClient) {}
 

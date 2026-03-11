@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login';
 import { MainLayoutComponent } from './components/layout/main-layout/main-layout';
-import { Student } from './components/student/student';
-import { Attendance } from './components/attendance/attendance';
-import { Class } from './components/class/class';
-import { Subject } from './components/subject/subject';
-import { Teacher } from './components/teacher/teacher';
+import { StudentComponent } from './components/student/student';
+import { AttendanceComponent } from './components/attendance/attendance';
+import { ClassComponent } from './components/class/class';
+import { SubjectComponent } from './components/subject/subject';
+import { TeacherComponent } from './components/teacher/teacher';
 
 
 export const routes: Routes = [
@@ -15,12 +15,12 @@ export const routes: Routes = [
     path: '',
     component: MainLayoutComponent,
     children: [
-      { path: 'student', component: Student },
-      { path: 'attendance', component: Attendance },
-      { path: 'class', component: Class },
-      { path: 'subject', component: Subject },
-      { path: 'teacher', component: Teacher },
-      { path: 'students', component: Student },
+      { path: 'student', component: StudentComponent },
+      { path: 'attendance', component: AttendanceComponent },
+      { path: 'class', component: ClassComponent },
+      { path: 'subject', component: SubjectComponent },
+      { path: 'teacher', component: TeacherComponent },
+      { path: 'students', component: StudentComponent },
     ],
   },
 ];

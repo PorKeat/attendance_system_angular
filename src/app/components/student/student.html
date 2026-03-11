@@ -1,6 +1,4 @@
-<div
-  class="relative min-h-screen overflow-x-hidden"
->
+<div class="relative min-h-screen overflow-x-hidden" (click)="closeDropdown()">
   <!-- Star dots -->
   <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
     <div class="absolute w-1 h-1 rounded-full bg-white/40" style="top: 4%; left: 12%"></div>
@@ -70,14 +68,14 @@
 
   <!-- Page content -->
   <div class="relative z-10">
-    <!-- Header -->
-    <div #headerEl class="flex items-center justify-between mb-6" style="opacity: 0">
+    <!-- Header ✅ no opacity:0 here -->
+    <div #headerEl class="flex items-center justify-between mb-6">
       <div>
         <h1 class="text-2xl font-bold text-white tracking-wide">Students</h1>
         <p class="text-white/40 text-xs mt-0.5">Manage all enrolled students</p>
       </div>
       <button
-        (click)="openCreate()"
+        (click)="openCreate(); $event.stopPropagation()"
         class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold text-purple-900 bg-white hover:bg-purple-50 hover:-translate-y-0.5 transition-all duration-200"
         style="box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25)"
       >
@@ -92,8 +90,7 @@
         class="mb-4 px-4 py-3 rounded-xl text-sm text-emerald-300 border border-emerald-400/20 flex items-center gap-2"
         style="background: rgba(16, 185, 129, 0.1)"
       >
-        <lucide-icon [img]="checkIcon" [size]="14"></lucide-icon>
-        {{ success }}
+        <lucide-icon [img]="checkIcon" [size]="14"></lucide-icon>{{ success }}
       </div>
     }
 
@@ -103,8 +100,7 @@
         class="mb-4 px-4 py-3 rounded-xl text-sm text-red-300 border border-red-400/20 flex items-center gap-2"
         style="background: rgba(239, 68, 68, 0.1)"
       >
-        <lucide-icon [img]="xIcon" [size]="14"></lucide-icon>
-        {{ error }}
+        <lucide-icon [img]="xIcon" [size]="14"></lucide-icon>{{ error }}
       </div>
     }
 
@@ -118,13 +114,12 @@
       </div>
     }
 
-    <!-- Table -->
+    <!-- Table ✅ no opacity:0 here -->
     @if (!loading) {
       <div
         #tableEl
         class="rounded-2xl overflow-hidden"
         style="
-          opacity: 0;
           background: rgba(255, 255, 255, 0.07);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
@@ -194,8 +189,8 @@
                     class="px-2.5 py-1 rounded-full text-xs font-medium"
                     [style]="
                       student.gender === 'M'
-                        ? 'background: rgba(96,165,250,0.15); color: #93c5fd; border: 1px solid rgba(96,165,250,0.2)'
-                        : 'background: rgba(244,114,182,0.15); color: #f9a8d4; border: 1px solid rgba(244,114,182,0.2)'
+                        ? 'background:rgba(96,165,250,0.15);color:#93c5fd;border:1px solid rgba(96,165,250,0.2)'
+                        : 'background:rgba(244,114,182,0.15);color:#f9a8d4;border:1px solid rgba(244,114,182,0.2)'
                     "
                   >
                     {{ student.gender === 'M' ? '♂ Male' : '♀ Female' }}
@@ -211,7 +206,7 @@
                       border: 1px solid rgba(168, 85, 247, 0.2);
                     "
                   >
-                    Class {{ student.classid }}
+                    {{ student.class?.classname ?? '—' }}
                   </span>
                 </td>
 
@@ -225,12 +220,8 @@
                         border: 1px solid rgba(251, 191, 36, 0.2);
                       "
                     >
-                      <lucide-icon
-                        [img]="pencilIcon"
-                        [size]="12"
-                        class="text-current"
-                      ></lucide-icon>
-                      Edit
+                      <lucide-icon [img]="pencilIcon" [size]="12" class="text-current"></lucide-icon
+                      >Edit
                     </button>
                     <button
                       (click)="delete(student.studentid)"
@@ -240,8 +231,8 @@
                         border: 1px solid rgba(239, 68, 68, 0.2);
                       "
                     >
-                      <lucide-icon [img]="trashIcon" [size]="12" class="text-current"></lucide-icon>
-                      Delete
+                      <lucide-icon [img]="trashIcon" [size]="12" class="text-current"></lucide-icon
+                      >Delete
                     </button>
                   </div>
                 </td>
@@ -265,7 +256,8 @@
     <div
       #modalBackdrop
       class="fixed inset-0 flex items-center justify-center z-50"
-      style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); opacity: 0"
+      style="background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px)"
+      (click)="closeDropdown()"
     >
       <div
         #modalCard
@@ -276,9 +268,8 @@
           box-shadow:
             0 24px 64px rgba(0, 0, 0, 0.6),
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
-          opacity: 0;
-          transform: scale(0.92);
         "
+        (click)="$event.stopPropagation()"
       >
         <div class="flex items-center justify-between mb-7">
           <h2 class="text-lg font-bold text-white flex items-center gap-2">
@@ -298,6 +289,7 @@
           </button>
         </div>
 
+        <!-- Student Name -->
         <div class="mb-4">
           <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
             >Student Name</label
@@ -311,6 +303,7 @@
           />
         </div>
 
+        <!-- Gender -->
         <div class="mb-4">
           <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
             >Gender</label
@@ -320,23 +313,55 @@
             class="w-full px-4 py-3 rounded-xl text-sm text-white outline-none border transition-all duration-200 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20"
             style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12)"
           >
-            <option value="" style="background: #1e0546">Select gender</option>
-            <option value="M" style="background: #1e0546">Male</option>
-            <option value="F" style="background: #1e0546">Female</option>
+            <option [ngValue]="''" style="background: #1e0546">Select gender</option>
+            <option [ngValue]="'M'" style="background: #1e0546">Male</option>
+            <option [ngValue]="'F'" style="background: #1e0546">Female</option>
           </select>
         </div>
 
-        <div class="mb-7">
+        <!-- Class searchable dropdown -->
+        <div class="mb-7 relative">
           <label class="block text-white/60 text-xs font-medium mb-1.5 uppercase tracking-wider"
-            >Class ID</label
+            >Class</label
           >
           <input
-            [(ngModel)]="form.classid"
+            [(ngModel)]="classSearch"
+            (input)="filterClasses()"
+            (focus)="classDropOpen = true; filteredClasses = classList"
+            (click)="$event.stopPropagation()"
             type="text"
-            placeholder="Enter class ID"
+            placeholder="Search class…"
             class="w-full px-4 py-3 rounded-xl text-sm text-white placeholder-white/30 outline-none border transition-all duration-200 focus:border-purple-400/60 focus:ring-2 focus:ring-purple-400/20"
             style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.12)"
           />
+
+          @if (classDropOpen && filteredClasses.length > 0) {
+            <div
+              class="absolute z-50 w-full mt-1 rounded-xl overflow-hidden max-h-44 overflow-y-auto"
+              style="
+                background: rgba(30, 5, 70, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+              "
+            >
+              @for (cls of filteredClasses; track cls.classid) {
+                <div
+                  (click)="selectClass(cls); $event.stopPropagation()"
+                  class="px-4 py-2.5 text-sm text-white/80 cursor-pointer flex items-center gap-2 transition-colors"
+                  onmouseover="this.style.background = 'rgba(168,85,247,0.2)'"
+                  onmouseout="this.style.background = 'transparent'"
+                >
+                  <div
+                    class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0"
+                    style="background: linear-gradient(135deg, #a855f7, #7c3aed)"
+                  >
+                    {{ cls.classname?.charAt(0)?.toUpperCase() }}
+                  </div>
+                  {{ cls.classname }}
+                </div>
+              }
+            </div>
+          }
         </div>
 
         <div class="flex gap-3">
